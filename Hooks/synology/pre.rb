@@ -2,6 +2,6 @@
 
 require_relative '../core/common'
 
-Bootstrap::Hooks.run('synology', stage: :pre) do |_hook|
-  # No actions defined. Enable this hook via config/hooks.yml when needed.
+Bootstrap::Hooks.run('synology', stage: :pre) do |hook|
+  hook.run('/opt/homebrew/bin/brew install --no-quarantine --quiet --cask synology-drive', allow_failure: true)
 end
