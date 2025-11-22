@@ -1,0 +1,6 @@
+dir=${1:-"."}
+if [[ $dir == '.' ]]; then
+    dir=$(pwd)
+fi
+success "Cleaning [*.pyc] [__pycache__] [.pytest_cache] in [$dir]."
+find "$dir" \( -iregex "*.pyc$" -o -name "__pycache__" -o -name ".pytest_cache" \) -exec rm -rf '{}' + -print 2>/dev/null

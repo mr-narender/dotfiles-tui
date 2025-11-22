@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# Backup and Restore Script for Specific Directories
+# Default source and target directories (can be overridden by external parameters)
+DEFAULT_SOURCE="/Users/narender/"
+DEFAULT_TARGET="/Volumes/Install macOS Sequoia/BackUp/"
+
+# Allow overriding the source and target directories with arguments
+SOURCE_DIR=${2:-$DEFAULT_SOURCE}
+DEST_DIR=${3:-$DEFAULT_TARGET}
+
+# Directories to include in backup/restore
+INCLUDE_DIRS=(
+    "Desktop"
+    "Documents"
+    "Downloads"
+    "Movies"
+    "Music"
+    "Photos"
+    "Software"
+    "Virtual Machines.localized"
+    ".dotfiles"
+)
+
+# Ensure correct usage
+if [ "$#" -lt 1 ] || [ "$#" -gt 3 ]; then
+    echo "Usage: $0 [backup|restore] [source_directory] [destination_directory]"
+    echo "Using defaults: SOURCE='$DEFAULT_SOURCE', TARGET='$DEFAULT_TARGET'"
+    exit 1
+fi
+
+# Mode of operation
+MODE=$1
+
+# Validate source and destination directories
+if [ ! -d "$SOURCE_DIR" ]; then
+    echo "Error: Source directory '$SOURCE_DIR' does not exist."
+    exit 1
+fi
+
+if [ ! -d "$DEST_DIR" ]; then
+    echo "Error: Destination directory '$DEST_DIR' does not exist."
+    exit 1
+fi
+
+# Normalize directories to ensure trailing slash
+SOURCE_DIR="${SOURCE_DIR%/}/"
+DEST_DIR="${DEST_DIR%/}/"
+
+# Function to process backup/restore
+process() {
+    local action=$1
+    local from_dir=$2
+    local to_dir=$3
+
+    for dir in "${INCLUDE_DIRS[@]}"; do
+        if [ -d "${from_dir}${dir}" ]; then
+            echo "${action^}: ${from_dir}${dir} -> ${to_dir}${dir}"
+            rsync -r "${from_dir}${dir}/" "${to_dir}${dir}/"
+        else
+            echo "Skipping: ${from_dir}${dir} (does not exist)"
+        fi
+    done
+}
+
+# Perform the action
+case "$MODE" in
+    backup)
+        echo "Starting backup from '$SOURCE_DIR' to '$DEST_DIR'..."
+        process "backup" "$SOURCE_DIR" "$DEST_DIR"
+        echo "Backup completed."
+        ;;
+    restore)
+        echo "Starting restore from '$DEST_DIR' to '$SOURCE_DIR'..."
+        process "restore" "$DEST_DIR" "$SOURCE_DIR"
+        echo "Restore completed."
+        ;;
+    *)
+        echo "Invalid mode: $MODE. Use 'backup' or 'restore'."
+        exit 1
+        ;;
+esac
+
+exit 0

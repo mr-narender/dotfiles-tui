@@ -1,0 +1,19 @@
+# update linuxOS
+if [[ $(uname -s) == "Linux" ]]; then
+  sudo apt clean all && sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt autoclean -y
+  return
+else
+  info "Fixing Permission for Brew"
+  # chmod -R go-w '/opt/homebrew/share/zsh'
+  chmod -R go-w "$(brew --repo)"
+  sudo chown -R $(whoami) $(brew --prefix)/*
+  brew_commands=('update-reset' 'update' 'upgrade' 'doctor' 'cleanup')
+  for each_command in ${brew_commands[@]}; do
+    first_char=$(printf ${each_command:0:1} | tr '[:lower:]' '[:upper:]')
+    last_chars=${each_command:1}
+    info "${first_char}${last_chars} "
+    brew $each_command --quiet
+  done
+  info "Fetching macOS updates"
+  sudo softwareupdate --install --all && success "Software update Completed." || fail "Software update Failed."
+fi

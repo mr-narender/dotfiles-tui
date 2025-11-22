@@ -1,0 +1,14 @@
+mkvs=()
+FFMPEG=$(which ffmpeg)
+if [ -z "${FFMPEG}" ]; then
+  printf "ffmpeg not found"
+  return 1
+fi
+while IFS= read -r -d $'\0'; do
+  mkvs+=("$REPLY")
+done < <(find . -iname "*.mkv" -print0)
+
+for mkv in ${mkvs[@]}; do
+  target_mp4=${mkv/.mkv/.mp4}
+  sudo ${FFMPEG} -i "${mkv}" -c copy "${target_mp4}" && sudo rm -f "${mkv}"
+done

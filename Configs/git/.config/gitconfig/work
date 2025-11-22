@@ -1,0 +1,23 @@
+[user]
+    name = ns20
+    email = ns20@sanger.ac.uk
+
+[dotfiles]
+    managed = true
+    lastupdate = 202102051200
+
+[pull]
+    rebase = false
+
+[core]
+    compression = 0
+
+[http]
+    proxy = 127.0.0.1:2228
+    sslverify = true
+    postBuffer = 524288000
+
+[https]
+    proxy = 127.0.0.1:2228
+    sslverify = true
+    postBuffer = 524288000

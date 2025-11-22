@@ -1,0 +1,5 @@
+application_support="${HOME}/Library/Application Support"
+
+[[ -e "${application_support}/.ffuserdata" ]] && rm -rf "${application_support}/.ffuserdata"
+
+[[ -e "${application_support}/.lpxuserdata" ]] && rm -rf "${application_support}/.lpxuserdata"

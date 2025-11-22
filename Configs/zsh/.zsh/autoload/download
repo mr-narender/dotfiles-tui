@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+
+function usage() {
+    info "download [-u <File or URL>] [-d <Target Dir> | Default: ${HOME}/Downloads/]"
+}
+
+function _downloadFile() {
+    fileUrl="$1"
+    target=${2:-"${HOME}/Downloads"}
+    wget -q --tries=1 https://torrends.to/torrent-tracker-list/\?download\=latest -O /tmp/lol.txt
+    if [[ $? == 0 && -s /tmp/lol.txt ]]; then
+        bt_tracker=$(paste -s -d, /tmp/lol.txt)
+        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 --log-level=info --summary-interval=0 --bt-tracker="${bt_tracker}" --dir="${target}" "${fileUrl}"
+    else
+        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 --log-level=info --summary-interval=0 --dir="${target}" "${fileUrl}"
+    fi
+}
+
+function main() {
+    # if no options are provided, show usage
+    if [[ $# -eq 0 ]]; then
+        usage
+        return 1
+    fi
+
+    while getopts ":u:d:" opt; do
+        case $opt in
+        u)
+            urlPath="$OPTARG"
+            ;;
+        d)
+            targetDir="$OPTARG"
+            ;;
+        *)
+            usage
+            return 1
+            ;;
+        esac
+    done
+
+    if [[ -z $urlPath ]]; then
+        fail "missing filePath or urlPath"
+        downloadHelper
+        return 1
+    fi
+
+    if [[ "$targetDir" == "." ]]; then
+        targetDir=$(pwd)
+    fi
+
+    if [[ -z "$targetDir" ]]; then
+        targetDir="${HOME}/Downloads/"
+    fi
+
+    info "Downloading $urlPath to $targetDir"
+
+    # download all torrents
+    if [[ "$urlPath" == "*" ]]; then
+        find . -type f -name "*.torrent" -print0 | while IFS= read -r -d '' file; do
+            info "Downloading file: ${file}"
+            _downloadFile "${file}" "${targetDir}"
+        done
+        return 0
+    fi
+
+    # download a single file
+    _downloadFile "${urlPath}" "${targetDir}"
+}
+
+# Call the main function
+main "$@"

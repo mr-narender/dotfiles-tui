@@ -1,0 +1,34 @@
+# Hooks excluded by default. Remove entries or set the stage to false to enable.
+excluded_hooks:
+  adguard: true
+  aide: true
+  alacritty: true
+  bartender: true
+  bun: true
+  cargo: true
+  choosy: true
+  controld: true
+  ctrld: true
+  deskpad: true
+  ice-hidemenubar: true
+  iterm: true
+  keka: true
+  lima: true
+  microsoft-edge: true
+  nvchad: true
+  oh-my-posh: true
+  pycharm: true
+  raindropio: true
+  rectangle:
+    pre: true
+  kitty: true
+  slack: true
+  soundsource: true
+  starship: true
+  synology: true
+  tmux: true
+  topnotch: true
+  transmission: true
+  wezterm: true
+  zellij: true
+  wins: true

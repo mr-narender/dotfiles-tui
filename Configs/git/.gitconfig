@@ -1,0 +1,25 @@
+[dotfiles]
+lastupdate = 202110171400
+managed = true
+
+[credential]
+	helper = osxkeychain
+
+[merge]
+	tool = vscode
+ff = no
+
+[mergetool "vscode"]
+	cmd = "code --wait "
+
+[include]
+path = /Users/narender/.config/gitconfig/core
+
+[include]
+path = /Users/narender/.config/gitconfig/home
+
+# [include]
+#     path = ~/.dotfiles/git/.config/work
+
+# [includeIf "gitdir/i:~/Documents/Workspace/Sanger/"]
+#  path = ~/.dotfiles/git/config/work
