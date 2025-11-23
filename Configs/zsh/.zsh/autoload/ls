@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Function to handle the 'ls' alias with conditional logic
+if command -v lsd >/dev/null 2>&1; then
+    lsd "$@"
+else
+    command ls "$@"
+fi

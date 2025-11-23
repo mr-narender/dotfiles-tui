@@ -1,0 +1,3 @@
+sudo find 2>/dev/null /private/var/folders/ -type d -name com.apple.dock.launchpad -exec rm -rf {} +; killall Dock
+# defaults write com.apple.dock ResetLaunchPad -bool true && sudo killall Dock
+# change_wallpaper "/System/Library/Desktop Pictures/Big Sur.heic"

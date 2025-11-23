@@ -1,0 +1,6 @@
+if [[ -n "$(ls -A /private/var/log/asl/*.asl 2>/dev/null)" ]]; then
+    sudo rm -f /private/var/log/asl/*.asl
+    success "Terminal cleaned.!\n"
+else
+    info "❗No action performed.\n"
+fi

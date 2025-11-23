@@ -1,0 +1,29 @@
+.quick-input-widget {
+  position: fixed !important;
+  top: 45% !important;
+  left: 65% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 50% !important;
+  background-color: #0ff !important; /* Neon blue background */
+  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff, 0 0 40px #0ff !important; /* Neon blue glow */
+  color: #000 !important; /* Text color */
+}
+
+/* Adjust the color of the items in the input widget list */
+.quick-input-widget .quick-input-list .monaco-list-row {
+  color: #fff !important; /* White text color for better readability */
+  background-color: #333 !important; /* Dark background for contrast */
+}
+
+/* Adjust the color of the selected item */
+.quick-input-widget .quick-input-list .monaco-list-row.focused {
+  background-color: #555 !important; /* Slightly lighter background for the selected item */
+  color: #0ff !important; /* Neon blue text color for the selected item */
+}
+
+.activity-bar .monaco-action-bar .actions-container {
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  justify-content: flex-end;
+}

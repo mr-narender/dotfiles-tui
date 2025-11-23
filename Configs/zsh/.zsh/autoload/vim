@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Function to handle the 'vim' alias with conditional logic
+
+if command -v zellij >/dev/null 2>&1; then
+    zellij action switch-mode locked && nvim "$@" && zellij action switch-mode normal
+else
+    nvim "$@"
+fi

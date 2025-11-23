@@ -1,0 +1,26 @@
+usbPath=$1
+target=${2:-"home"}
+
+if [[ $target == "home" ]]; then
+  basePath=$(cd /Applications/Install\ macOS* && printf "%s" "$(pwd)" && cd "${HOME}" || exit)
+else
+  basePath="${HOME}/Software/Disc Images/Mac OS X/9. macOS Monterey/Install macOS Monterey.app"
+fi
+info "$target"
+
+if [[ -d $usbPath ]]; then
+  success "Valid USB Drive\n"
+else
+  warn "💩 Invalid or no USB Drive."
+  return 1
+fi
+info "$usbPath"
+
+createInstallMediaBinary="$basePath/Contents/Resources/createinstallmedia"
+if [[ -e "$createInstallMediaBinary" ]]; then
+  success "Initiating media creation\n"
+  sudo "$createInstallMediaBinary" --nointeraction --volume "$usbPath"
+else
+  warn "💩 Invalid path %s\n" "$createInstallMediaBinary"
+  return 1
+fi

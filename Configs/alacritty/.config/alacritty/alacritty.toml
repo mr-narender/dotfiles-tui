@@ -1,0 +1,31 @@
+[env]
+TERM = "xterm-256color"
+
+[window]
+startup_mode =  "Maximized"
+# startup_mode =  "SimpleFullscreen"
+# position = { x = 800, y = 400 }
+dimensions = { columns = 110, lines = 30 }
+padding.x = 10
+padding.y = 10
+decorations = "Buttonless"
+opacity = 0.8
+blur = true
+option_as_alt = "Both"
+
+[font]
+normal.family = "CaskaydiaCove Nerd Font Propo"
+size = 19
+
+[scrolling]
+history = 100000
+multiplier = 3
+
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+
+[selection]
+save_to_clipboard = true
+
+[mouse]
+hide_when_typing = true

@@ -1,0 +1,139 @@
+{
+  "vscode_custom_css.statusbar": false,
+  "vscode_custom_css.imports": [
+    "file:///Users/narender/Library/Application Support/Code/User/style.css"
+  ],
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "breadcrumbs.enabled": false,
+  "chat.editor.fontSize": 14,
+  "chat.editor.wordWrap": "on",
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.bracketPairColorization.enabled": false,
+  "editor.folding": true,
+  "editor.foldingStrategy": "auto",
+  "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.fontWeight": "400",
+  "editor.formatOnSave": true,
+  "editor.glyphMargin": false,
+  "editor.guides.highlightActiveBracketPair": true,
+  "editor.guides.indentation": false,
+  "editor.hideCursorInOverviewRuler": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.lightbulb.enabled": "off",
+  "editor.lineNumbers": "on",
+  "editor.linkedEditing": true,
+  "editor.matchBrackets": "never",
+  "editor.minimap.autohide": true,
+  "editor.minimap.maxColumn": 80,
+  "editor.minimap.renderCharacters": false,
+  "editor.multiCursorModifier": "alt",
+  "editor.occurrencesHighlight": "off",
+  "editor.overviewRulerBorder": false,
+  "editor.padding.top": 10,
+  "editor.renderWhitespace": "none",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "auto",
+  "editor.scrollbar.verticalScrollbarSize": 0,
+  "editor.showFoldingControls": "mouseover",
+  "editor.suggestSelection": "first",
+  "explorer.compactFolders": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.openEditors.visible": 1,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 10000,
+  "files.exclude": {
+    "/.classpath": true,
+    "/.factorypath": true,
+    "/.project": true,
+    "/.settings": true
+  },
+  "files.watcherExclude": {
+    "/.git/objects/": true,
+    "/node_modules/": true
+  },
+  "git.autofetch": true,
+  "redhat.telemetry.enabled": false,
+  "scm.diffDecorations": "none",
+  "scm.showIncomingChanges": "always",
+  "scm.showOutgoingChanges": "always",
+  "terminal.integrated.cursorStyle": "block",
+  "terminal.integrated.defaultLocation": "view",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.env.windows": {},
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font, Consolas, 'Courier New', monospace",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontWeight": "500",
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.lineHeight": 1.1,
+  "terminal.integrated.persistentSessionReviveProcess": "onExitAndWindowClose",
+  "terminal.integrated.profiles.windows": {
+    "Command Prompt": {
+      "args": [],
+      "icon": "terminal-powershell",
+      "path": [
+        "${env:windir}\\Sysnative\\powershell",
+        "${env:windir}\\System32\\powershell.exe"
+      ]
+    },
+    "Git Bash": {
+      "source": "Git Bash"
+    },
+    "PowerShell": {
+      "icon": "terminal-powershell",
+      "source": "PowerShell"
+    }
+  },
+  "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+  "terminal.integrated.tabs.enabled": true,
+  "terminal.integrated.tabs.location": "right",
+  "window.autoDetectColorScheme": true,
+  "window.commandCenter": true,
+  "window.density.editorTabHeight": "compact",
+  "window.newWindowDimensions": "inherit",
+  "window.zoomPerWindow": true,
+  "workbench.activityBar.location": "hidden",
+  "workbench.colorCustomizations": {
+    "[mono-cl]": {
+      "editorLineNumber.foreground": "#4b4b4b"
+    },
+    "[Violaceous (rainglow)]": {
+      "editorGutter.background": "#242038",
+      "terminal.background": "#242038",
+      "titleBar.activeBackground": "#242038",
+      "titleBar.activeForeground": "#ffffff"
+    },
+    "window.titleBarStyle": ""
+  },
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.editor.enablePreview": true,
+  "workbench.iconTheme": "catppuccin-mocha",
+  "workbench.layoutControl.enabled": false,
+  "workbench.layoutControl.type": "both",
+  "workbench.panel.defaultLocation": "bottom",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "workbench.preferredHighContrastLightColorTheme": "Catppuccin Mocha",
+  "workbench.preferredLightColorTheme": "Catppuccin Mocha",
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.reduceMotion": "on",
+  "workbench.sideBar.location": "left",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": false,
+  "workbench.tree.renderIndentGuides": "none",
+  "workbench.view.alwaysShowHeaderActions": true
+}

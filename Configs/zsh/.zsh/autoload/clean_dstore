@@ -1,0 +1,6 @@
+dir=${1:-"."}
+if [[ $dir == '.' ]]; then
+    dir=$(pwd)
+fi
+success "Cleaning .DStore in [$dir]."
+find "$dir" -name .DS_Store -exec rm -f '{}' \; -print 2>/dev/null

@@ -1,0 +1,16 @@
+charliermarsh.ruff
+esbenp.prettier-vscode
+ms-python.debugpy
+ms-python.python
+ms-python.vscode-pylance
+foxundermoon.shell-format
+evondev.indent-rainbow-palettes
+redhat.vscode-yaml
+richie5um2.vscode-sort-json
+rust-lang.rust-analyzer
+tamasfe.even-better-toml
+usernamehw.errorlens
+sumneko.lua
+Catppuccin.catppuccin-vsc
+Catppuccin.catppuccin-vsc-icons
+miguelsolorio.fluent-icons

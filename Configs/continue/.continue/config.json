@@ -1,0 +1,48 @@
+{
+  "allowAnonymousTelemetry": false,
+  "customCommands": [
+    {
+      "description": "Write unit tests for highlighted code",
+      "name": "test",
+      "prompt": "Write a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file."
+    }
+  ],
+  "embeddingsProvider": {
+    "apiBase": "http://localhost:11434",
+    "model": "nomic-embed-text",
+    "provider": "ollama"
+  },
+  "models": [
+    {
+      "apiBase": "http://localhost:11434",
+      "model": "llama3",
+      "provider": "ollama",
+      "title": "llama3"
+    }
+  ],
+  "slashCommands": [
+    {
+      "description": "Edit selected code",
+      "name": "edit"
+    },
+    {
+      "description": "Write comments for the selected code",
+      "name": "comment"
+    },
+    {
+      "description": "Export this session as markdown",
+      "name": "share"
+    },
+    {
+      "description": "Generate a shell command",
+      "name": "cmd"
+    }
+  ],
+  "systemMessage": "Do not explain anything unless explicitely asked to do so. Just Write the code or execute the prompt which is being asked in the prompt.",
+  "tabAutocompleteModel": {
+    "apiBase": "http://localhost:11434",
+    "model": "llama3",
+    "provider": "ollama",
+    "title": "Tab Autocomplete Model"
+  }
+}

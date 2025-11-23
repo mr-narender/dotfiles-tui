@@ -1,0 +1,20 @@
+[user]
+    name = mr-narender
+    email = mr.narender@icloud.com
+    signingKey = 44FB1024
+
+[commit]
+    gpgsign = false
+
+[dotfiles]
+    managed = true
+    lastupdate = 202102051200
+
+[pull]
+    rebase = false
+
+[core]
+    compression = 0
+
+[http]
+    postBuffer = 524288000

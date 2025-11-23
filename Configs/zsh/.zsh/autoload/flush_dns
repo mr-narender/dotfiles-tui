@@ -1,0 +1,6 @@
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+if [[ -f "${HOME}/Library/Caches/com.apple.Safari/Cache.db*" ]]; then
+    sudo rm -f "${HOME}/Library/Caches/com.apple.Safari/Cache.db*"
+fi
+success "DNS Cache flushed.\n"
