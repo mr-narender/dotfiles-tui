@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Borders configuration for macOS
+options=(
+    blacklist="Finder,Safari,Spotlight,System Settings,Activity Monitor,Preview,Messages,FaceTime,Music,Photos,Calendar,Reminders,App Store,Notes,Mail"
+    active_color=0xff00ff00
+    inactive_color=0xFFFFFACD
+    style=round
+    hidpi=off
+    width=3
+)
+
+borders "${options[@]}"
