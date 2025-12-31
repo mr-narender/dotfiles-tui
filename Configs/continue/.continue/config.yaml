@@ -1,0 +1,24 @@
+name: Open WebUI
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Ollama
+    provider: openai
+    model: deepseek-r1
+    env:
+      useLegacyCompletionsEndpoint: false
+    apiBase: http://192.168.2.23:8080/ollama/v1
+    apiKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZjhjY2Q4LTcyOTgtNGNiMC1hZjU4LTE4MThhNWQ1OWU3ZCJ9.gv70cSpZJVft38HOUuDosH5qqQ6xGYPg3Ox2lX_p52M
+    roles:
+      - chat
+      - edit
+
+  - name: Granite Code 8b
+    provider: openai
+    model: granite-code:8b
+    apiBase: http://192.168.2.23:8080/ollama/v1
+    apiKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExZjhjY2Q4LTcyOTgtNGNiMC1hZjU4LTE4MThhNWQ1OWU3ZCJ9.gv70cSpZJVft38HOUuDosH5qqQ6xGYPg3Ox2lX_p52M
+    roles:
+      - autocomplete
+

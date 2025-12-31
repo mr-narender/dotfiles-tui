@@ -1,0 +1,30 @@
+# local-mcp configuration
+
+# Filesystem tool is restricted to these roots (absolute paths).
+allowed_roots:
+  - /Users/narender/Documents/Developer
+
+# PostgreSQL connections (named). Use least-privileged users.
+postgres:
+  connections:
+    local_dev:
+      url: "postgresql://app_user:change_me@localhost:5432/app_db"
+  # Write-guard policy (applies to pg_exec)
+  write_policy:
+    allow_ddl: false          # if true, allows CREATE/ALTER/DROP (not recommended)
+    allow_truncate: false
+    require_where: true       # require WHERE for UPDATE/DELETE
+    allow_multi_statement: false  # disallow multiple statements separated by ';'
+
+ssh:
+  # Named SSH targets. Use key-based auth (no password prompts).
+  hosts:
+    prod:
+      target: "narender@server.tabby-universe.ts.net"
+      nerdctl_path: "nerdctl"     # or absolute path on remote, e.g. /usr/local/bin/nerdctl
+
+nerdctl:
+  local_path: "nerdctl"          # if installed locally; otherwise leave as-is and tool will error
+
+logging:
+  level: "INFO"

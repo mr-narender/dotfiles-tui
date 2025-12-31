@@ -1,0 +1,84 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Pane",
+    "bindings": {
+      "alt-I": "pane::SplitUp",
+      "alt-_": "pane::SplitDown",
+      "alt-J": "pane::SplitLeft",
+      "alt-|": "pane::SplitRight"
+    }
+  },
+  {
+    "bindings": {
+      // "f5": "debugger::Start",
+      "cmd-f5": "debugger::Rerun",
+      "cmd-shift-f5": "debugger::Stop",
+      "f6": "debugger::Pause",
+      "f10": "debugger::StepOver",
+      "f11": "debugger::StepInto",
+      "shift-f11": "debugger::StepOut"
+    }
+  },
+  {
+    "context": "Workspace && !debugger_stopped && !debugger_running",
+    "bindings": {
+      "f5": "debugger::Start",
+      "ctrl+f5": "debugger::Rerun"
+    }
+  },
+  {
+    "context": "Workspace && debugger_stopped",
+    "bindings": {
+      "f5": "debugger::Continue",
+      "cmd-f5": "debugger::Restart"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-F": "editor::Format",
+      "alt-O": "editor::OrganizeImports"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      // "shift shift": "file_finder::Toggle"
+      "cmd-y": "terminal_panel::ToggleFocus",
+      "cmd-shift-b": "workspace::ToggleRightDock",
+      "cmd-shift-g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-t": "workspace::NewTerminal"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      // "j k": "vim::SwitchToNormalMode"
+    }
+  },
+  {
+    "context": "Terminal && text_selected && !menu",
+    "bindings": {
+      "cmd-c": "terminal::Copy"
+    }
+  }
+]

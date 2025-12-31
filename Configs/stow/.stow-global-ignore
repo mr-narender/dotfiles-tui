@@ -1,0 +1,21 @@
+# macOS system files
+\.DS_Store
+
+# Git
+\.git
+\.gitmodules
+
+# Vim swap files
+\.swp
+
+# Backup files
+\~$
+\.bak$
+\*~
+
+# Windows thumbnails
+Thumbs\.db
+
+# IDE config directories
+\.idea
+\.vscode
