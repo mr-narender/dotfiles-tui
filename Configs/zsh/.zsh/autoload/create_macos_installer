@@ -1,26 +1,51 @@
-usbPath=$1
-target=${2:-"home"}
+# Helper function
+show_help() {
+  cat <<EOF
+Usage: $(basename "$0") --target-path=<path> [--source-installer=<path>]
 
-if [[ $target == "home" ]]; then
-  basePath=$(cd /Applications/Install\ macOS* && printf "%s" "$(pwd)" && cd "${HOME}" || exit)
-else
-  basePath="${HOME}/Software/Disc Images/Mac OS X/9. macOS Monterey/Install macOS Monterey.app"
-fi
-info "$target"
+Arguments:
+  --target-path         Path to the target USB drive (required)
+  --source-installer    Path to macOS installer.app (optional, defaults to /Applications/Install macOS*)
+EOF
+}
 
-if [[ -d $usbPath ]]; then
-  success "Valid USB Drive\n"
-else
-  warn "💩 Invalid or no USB Drive."
+# Defaults
+target_path=""
+source_installer=""
+source_binary=""
+
+# Parse arguments
+zparseopts -D -E -target-path:=target_path_array -source-installer:=source_installer_array
+
+# Extract values
+target_path=${target_path_array[2]:-""}
+source_installer=${source_installer_array[2]:-""}
+
+# Show help if no target_path provided
+if [[ -z "$target_path" ]]; then
+  show_help
   return 1
 fi
-info "$usbPath"
 
-createInstallMediaBinary="$basePath/Contents/Resources/createinstallmedia"
-if [[ -e "$createInstallMediaBinary" ]]; then
-  success "Initiating media creation\n"
-  sudo "$createInstallMediaBinary" --nointeraction --volume "$usbPath"
-else
-  warn "💩 Invalid path %s\n" "$createInstallMediaBinary"
+# Set default installer path if not provided
+if [[ -z "$source_installer" ]]; then
+  source_installer=$(cd /Applications/Install\ macOS* && pwd)
+fi
+
+source_binary="$source_installer/Contents/Resources/createinstallmedia"
+
+info "Target Path: $target_path"
+info "Source Installer: $source_installer"
+
+if [[ ! -d "$target_path" ]]; then
+  warn "💩 Invalid or no USB drive."
   return 1
 fi
+
+if [[ ! -x "$source_binary" ]]; then
+  warn "💩 Invalid or missing installer binary: $source_binary"
+  return 1
+fi
+
+success "Initiating media creation\n"
+sudo "$source_binary" --nointeraction --volume "$target_path"

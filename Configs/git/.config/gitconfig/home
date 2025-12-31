@@ -1,10 +1,10 @@
 [user]
     name = mr-narender
     email = mr.narender@icloud.com
-    signingKey = 44FB1024
+    signingKey = ~/.ssh/id_rsa.pub
 
 [commit]
-    gpgsign = false
+    gpgsign = true
 
 [dotfiles]
     managed = true

@@ -1,71 +1,73 @@
-#!/usr/bin/env ruby
+show_help() {
+    cat <<EOF
+Usage: $(basename "$0") --url=<file_or_url> [--target-dir=<directory>]
 
-function usage() {
-    info "download [-u <File or URL>] [-d <Target Dir> | Default: ${HOME}/Downloads/]"
+Arguments:
+  --url         File or URL to download (required)
+  --target-dir  Target directory (optional, default: \$HOME/Downloads)
+
+Example:
+  ./script.sh --url=http://example.com/file.torrent --target-dir=~/Downloads
+EOF
 }
 
-function _downloadFile() {
-    fileUrl="$1"
-    target=${2:-"${HOME}/Downloads"}
-    wget -q --tries=1 https://torrends.to/torrent-tracker-list/\?download\=latest -O /tmp/lol.txt
+download_file() {
+    local file_url="$1"
+    local target_dir="${2:-${HOME}/Downloads}"
+
+    wget -q --tries=1 https://torrends.to/torrent-tracker-list/?download=latest -O /tmp/lol.txt
     if [[ $? == 0 && -s /tmp/lol.txt ]]; then
+        local bt_tracker
         bt_tracker=$(paste -s -d, /tmp/lol.txt)
-        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 --log-level=info --summary-interval=0 --bt-tracker="${bt_tracker}" --dir="${target}" "${fileUrl}"
+        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 \
+            --log-level=info --summary-interval=0 --bt-tracker="${bt_tracker}" \
+            --dir="${target_dir}" "${file_url}"
     else
-        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 --log-level=info --summary-interval=0 --dir="${target}" "${fileUrl}"
+        env aria2c -x 16 -c --seed-time=0 --file-allocation=none -UMozilla/5.0 \
+            --log-level=info --summary-interval=0 --dir="${target_dir}" "${file_url}"
     fi
 }
 
-function main() {
-    # if no options are provided, show usage
+main() {
     if [[ $# -eq 0 ]]; then
-        usage
+        show_help
         return 1
     fi
 
-    while getopts ":u:d:" opt; do
-        case $opt in
-        u)
-            urlPath="$OPTARG"
-            ;;
-        d)
-            targetDir="$OPTARG"
-            ;;
-        *)
-            usage
-            return 1
-            ;;
-        esac
-    done
+    # Parse options with zparseopts
+    declare -a url_array
+    declare -a target_dir_array
 
-    if [[ -z $urlPath ]]; then
-        fail "missing filePath or urlPath"
-        downloadHelper
+    zparseopts -D -E --url:=url_array --target-dir:=target_dir_array
+
+    url_path="${url_array[2]:-}"
+    target_dir="${target_dir_array[2]:-}"
+
+    if [[ -z "$url_path" ]]; then
+        fail "Missing --url argument"
+        show_help
         return 1
     fi
 
-    if [[ "$targetDir" == "." ]]; then
-        targetDir=$(pwd)
+    if [[ "$target_dir" == "." ]]; then
+        target_dir=$(pwd)
     fi
 
-    if [[ -z "$targetDir" ]]; then
-        targetDir="${HOME}/Downloads/"
+    if [[ -z "$target_dir" ]]; then
+        target_dir="${HOME}/Downloads"
     fi
 
-    info "Downloading $urlPath to $targetDir"
+    info "Downloading $url_path to $target_dir"
 
-    # download all torrents
-    if [[ "$urlPath" == "*" ]]; then
+    if [[ "$url_path" == "*" ]]; then
         find . -type f -name "*.torrent" -print0 | while IFS= read -r -d '' file; do
             info "Downloading file: ${file}"
-            _downloadFile "${file}" "${targetDir}"
+            download_file "${file}" "${target_dir}"
         done
         return 0
     fi
 
-    # download a single file
-    _downloadFile "${urlPath}" "${targetDir}"
+    download_file "${url_path}" "${target_dir}"
 }
 
-# Call the main function
 main "$@"

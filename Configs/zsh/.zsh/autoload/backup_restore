@@ -3,7 +3,7 @@
 # Backup and Restore Script for Specific Directories
 # Default source and target directories (can be overridden by external parameters)
 DEFAULT_SOURCE="/Users/narender/"
-DEFAULT_TARGET="/Volumes/Install macOS Sequoia/BackUp/"
+DEFAULT_TARGET="/Volumes/BackUp/"
 
 # Allow overriding the source and target directories with arguments
 SOURCE_DIR=${2:-$DEFAULT_SOURCE}
@@ -16,9 +16,8 @@ INCLUDE_DIRS=(
     "Downloads"
     "Movies"
     "Music"
-    "Photos"
+    "Pictures"
     "Software"
-    "Virtual Machines.localized"
     ".dotfiles"
 )
 
@@ -55,7 +54,7 @@ process() {
 
     for dir in "${INCLUDE_DIRS[@]}"; do
         if [ -d "${from_dir}${dir}" ]; then
-            echo "${action^}: ${from_dir}${dir} -> ${to_dir}${dir}"
+            echo "${(C)action}: ${from_dir}${dir} -> ${to_dir}${dir}"
             rsync -r "${from_dir}${dir}/" "${to_dir}${dir}/"
         else
             echo "Skipping: ${from_dir}${dir} (does not exist)"
@@ -65,20 +64,18 @@ process() {
 
 # Perform the action
 case "$MODE" in
-    backup)
-        echo "Starting backup from '$SOURCE_DIR' to '$DEST_DIR'..."
-        process "backup" "$SOURCE_DIR" "$DEST_DIR"
-        echo "Backup completed."
-        ;;
-    restore)
-        echo "Starting restore from '$DEST_DIR' to '$SOURCE_DIR'..."
-        process "restore" "$DEST_DIR" "$SOURCE_DIR"
-        echo "Restore completed."
-        ;;
-    *)
-        echo "Invalid mode: $MODE. Use 'backup' or 'restore'."
-        exit 1
-        ;;
+backup)
+    echo "Starting backup from '$SOURCE_DIR' to '$DEST_DIR'..."
+    process "backup" "$SOURCE_DIR" "$DEST_DIR"
+    echo "Backup completed."
+    ;;
+restore)
+    echo "Starting restore from '$DEST_DIR' to '$SOURCE_DIR'..."
+    process "restore" "$DEST_DIR" "$SOURCE_DIR"
+    echo "Restore completed."
+    ;;
+*)
+    echo "Invalid mode: $MODE. Use 'backup' or 'restore'."
+    exit 1
+    ;;
 esac
-
-exit 0

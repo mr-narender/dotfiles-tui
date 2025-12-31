@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
 test -d /usr/local/opt/fzf/shell || return 0
 

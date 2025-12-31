@@ -1,15 +1,10 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
 
 # uncomment this and the last line for zprof info for profiling zsh startup time
 # zmodload zsh/zprof
 # set -x
 # shellcheck disable=SC1091
-# Load environment variables from .env
-set -a
-[ -f ~/.env ] && source ~/.env
-set +a
-
 [[ -f "${XDG_DATA_HOME:-${HOME}/.local/share}/zap/zap.zsh" ]] && source "${XDG_DATA_HOME:-${HOME}/.local/share}/zap/zap.zsh"
 plug "zsh-users/zsh-autosuggestions"
 plug "zap-zsh/supercharge"
@@ -49,6 +44,12 @@ unset zsh_completion
 [ -f ~/.localrc ] && source ~/.localrc
 
 # set completion options for uv
-eval "$(uv generate-shell-completion zsh)" && source ~/.venv/bin/activate
+eval "$(uv generate-shell-completion zsh)"
+
+# load atuin
+eval "$(atuin init zsh)"
 
 # zprof
+
+# Added by Antigravity
+export PATH="/Users/narender/.antigravity/antigravity/bin:$PATH"

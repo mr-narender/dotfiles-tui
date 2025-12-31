@@ -1,0 +1,45 @@
+TMUX_PATH="/opt/homebrew/bin/tmux"
+TMUX_PLUGINS_PATH="${HOME}/.tmux/plugins"
+
+# if tmux path does not exist
+if [ ! -x "${TMUX_PATH}" ]; then
+    echo "Error: tmux path '${TMUX_PATH}' does not exist or is not executable"
+    sleep 1
+    exit 1
+fi
+
+# check if tpm is not installed, then install it
+if [ ! -d "${TMUX_PLUGINS_PATH}/tpm" ]; then
+    echo "installing tmux plugins"
+    git clone https://github.com/tmux-plugins/tpm "${TMUX_PLUGINS_PATH}/tpm"
+
+    # start a server but don't attach to it
+    ${TMUX_PATH} start-server
+
+    # create a new session but don't attach to it either
+    ${TMUX_PATH} new-session -d
+
+    # install the plugins
+    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+    # killing the server is not required, I guess
+    ${TMUX_PATH} kill-server
+
+else
+    echo "loading tmux with plugins installed."
+fi
+
+# Check if the tmux session "default" is running
+${TMUX_PATH} has-session -t default 2>/dev/null
+
+# $? returns the exit status of the last command executed
+if [ $? -eq 1 ]; then
+    # If session does not exist, create it
+    ${TMUX_PATH} new-session -d -s default
+fi
+
+# Attach to the session (or attach to existing session)
+${TMUX_PATH} attach -t default
+
+# make sure tmux plugins are installed
+${TMUX_PATH} run-shell "${TMUX_PLUGINS_PATH}/tpm/bin/install_plugins"

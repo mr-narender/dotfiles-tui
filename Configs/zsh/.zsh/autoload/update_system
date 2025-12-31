@@ -1,19 +1,54 @@
-# update linuxOS
-if [[ $(uname -s) == "Linux" ]]; then
-  sudo apt clean all && sudo apt update && sudo apt upgrade -y && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt autoclean -y
-  return
-else
-  info "Fixing Permission for Brew"
-  # chmod -R go-w '/opt/homebrew/share/zsh'
-  chmod -R go-w "$(brew --repo)"
-  sudo chown -R $(whoami) $(brew --prefix)/*
-  brew_commands=('update-reset' 'update' 'upgrade' 'doctor' 'cleanup')
-  for each_command in ${brew_commands[@]}; do
-    first_char=$(printf ${each_command:0:1} | tr '[:lower:]' '[:upper:]')
-    last_chars=${each_command:1}
-    info "${first_char}${last_chars} "
-    brew $each_command --quiet
+update_linux() {
+  info "Starting Linux system update..."
+  sudo apt clean all &&
+    sudo apt update &&
+    sudo apt upgrade -y &&
+    sudo apt dist-upgrade -y &&
+    sudo apt autoremove -y &&
+    sudo apt autoclean -y &&
+    success "Linux system updated successfully."
+}
+
+fix_brew_permissions() {
+  info "Fixing Homebrew permissions..."
+  chmod -R go-w "$(brew --repo)" || warn "Failed to fix permissions on brew repo"
+  sudo chown -R "$(whoami)" "$(brew --prefix)"/* || warn "Failed to change ownership of brew prefix"
+}
+
+run_brew_commands() {
+  info "Brewing..."
+  local brew_commands=('update-reset' 'update' 'upgrade' 'doctor' 'cleanup')
+  for cmd in "${brew_commands[@]}"; do
+    capitalized_cmd="${(C)cmd}"
+    info "Running brew ${capitalized_cmd}..."
+    brew "${cmd}" --quiet || warn "brew $cmd failed"
   done
-  info "Fetching macOS updates"
-  sudo softwareupdate --install --all && success "Software update Completed." || fail "Software update Failed."
-fi
+}
+
+update_macos() {
+  info "Fetching macOS software updates..."
+  if sudo softwareupdate --install --all; then
+    success "Software update completed."
+  else
+    fail "Software update failed."
+  fi
+}
+
+main() {
+  case "$(uname -s)" in
+  Linux)
+    update_linux
+    ;;
+  Darwin)
+    fix_brew_permissions
+    run_brew_commands
+    update_macos
+    ;;
+  *)
+    warn "Unsupported OS: $(uname -s)"
+    return 1
+    ;;
+  esac
+}
+
+main

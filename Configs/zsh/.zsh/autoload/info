@@ -1,1 +1,4 @@
-printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+info() { echo -e "${CYAN}[INFO]${NC} $*"; }

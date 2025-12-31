@@ -1,0 +1,13 @@
+# Store all arguments to handle spaces in filenames
+local args=("$@")
+
+if [ ${#args[@]} -eq 0 ]; then
+    # No arguments provided, open nvim in current directory
+    command nvim "$(pwd)" .
+elif [ -d "${args[0]}" ]; then
+    # If first argument is a directory, cd into it and open nvim
+    cd "${args[0]}" && command nvim "$(pwd)" .
+else
+    # For files or non-existent paths, let nvim handle it directly
+    command nvim "${args[@]}"
+fi
