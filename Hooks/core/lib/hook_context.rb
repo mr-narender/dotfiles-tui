@@ -39,11 +39,28 @@ module Bootstrap
     end
 
     def run(command, allow_failure: false, env: {})
-      Bootstrap::System.run(command, allow_failure: allow_failure, env: env, dry_run: dry_run?)
+      # Optimization: Check if package is already installed
+      if command.is_a?(String) && command.start_with?('/opt/homebrew/bin/brew install')
+        if command.include?('--formula')
+          formula = command.match(/--formula\s+([^\s]+)/)&.captures&.first
+          if formula && @configurator&.formula_installed?(formula)
+            Bootstrap::Logger.log("Skipping #{formula} (already installed)")
+            return true
+          end
+        elsif command.include?('--cask')
+          cask = command.match(/--cask\s+([^\s]+)/)&.captures&.first
+          if cask && @configurator&.cask_installed?(cask)
+            Bootstrap::Logger.log("Skipping #{cask} (already installed)")
+            return true
+          end
+        end
+      end
+
+      Bootstrap::System.run(command, allow_failure: allow_failure, env: env, dry_run: dry_run?, quiet: @configurator&.quiet)
     end
 
     def run!(command, env: {})
-      Bootstrap::System.run!(command, env: env, dry_run: dry_run?)
+      Bootstrap::System.run!(command, env: env, dry_run: dry_run?, quiet: @configurator&.quiet)
     end
 
     def home_path(*segments)

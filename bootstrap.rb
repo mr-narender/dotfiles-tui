@@ -8,6 +8,7 @@ require 'optparse'
 
 require_relative './Hooks/core/common'
 require_relative './Hooks/core/library'
+require_relative './Hooks/core/lib/tui'
 
 # Load .env file if it exists
 env_file = File.join(File.expand_path(__dir__), '.env')
@@ -43,7 +44,8 @@ module Bootstrap
         formula: false,
         mos: false,
         dry_run: false,
-        all: false
+        all: false,
+        secrets_path: File.join(Dir.home, 'Documents', 'Secrets')
       }
     end
 
@@ -59,14 +61,15 @@ module Bootstrap
       puts <<~HELP
         Usage: bootstrap.rb [options]
         Options:
-          -a, --all       Run all tasks (Link -> Install -> Link)
-          -l, --link      Run stow for linking
-          -u, --unlink    Run stow for unlinking
-          -c, --cask      Run cask installer
-          -f, --formula   Run formula installer
-          -m, --mos       Install Mac App Store Apps
-          -d, --dry-run   Run in dry-run mode (no changes)
-          -h, --help      Display this help message
+          -a, --all             Run all tasks (Link -> Install -> Link)
+          -l, --link            Run stow for linking
+          -u, --unlink          Run stow for unlinking
+          -c, --cask            Run cask installer
+          -f, --formula         Run formula installer
+          -m, --mos             Install Mac App Store Apps
+          -d, --dry-run         Run in dry-run mode (no changes)
+          --secrets-path PATH   Path to secrets directory (default: ~/Documents/Secrets)
+          -h, --help            Display this help message
       HELP
       exit
     end
@@ -82,6 +85,7 @@ module Bootstrap
         opts.on('-f', '--formula', 'Run formula installer') { @options[:formula] = true }
         opts.on('-m', '--mos', 'Install Mac App Store Apps') { @options[:mos] = true }
         opts.on('-d', '--dry-run', 'Run in dry-run mode') { @options[:dry_run] = true }
+        opts.on('--secrets-path PATH', 'Path to secrets directory') { |path| @options[:secrets_path] = path }
         opts.on('-h', '--help', 'Display help') { display_help }
 
         opts.parse!
@@ -89,10 +93,34 @@ module Bootstrap
     end
 
     def validate_options
+      # If no options provided, show interactive menu
+      unless @options.values.any? { |v| v == true } # Check if any boolean flag is set
+        require_relative 'Hooks/core/lib/menu'
+        
+        menu_options = [
+          { label: 'Install Everything (Recommended)', value: :all },
+          { label: 'Link Configs Only', value: :link },
+          { label: 'Install Formulae', value: :formula },
+          { label: 'Install Casks', value: :cask },
+          { label: 'Install App Store Apps', value: :mos },
+          { label: 'Unlink Configs', value: :unlink },
+          { label: 'Dry Run (Test All)', value: :dry_run },
+          { label: 'Exit', value: :exit }
+        ]
+
+        selection = Bootstrap::Menu.new(menu_options).show
+        
+        if selection == :exit
+          exit
+        elsif selection == :dry_run
+          @options[:dry_run] = true
+          @options[:all] = true
+        else
+          @options[selection] = true
+        end
+      end
+
       if @options[:all]
-        # If --all is specified, ignore other conflicting flags or just proceed.
-        # We can clear others or just let the logic handle it.
-        # For simplicity, we'll let the logic handle it.
         return
       end
 
@@ -107,16 +135,21 @@ module Bootstrap
       if @options[:formula] && @options[:unlink]
         abort 'Error: Cannot specify --formula and --unlink together.'
       end
-
-      unless @options.values.any?
-        puts 'Error: Please specify at least one option.'
-        display_help
-      end
     end
 
     def execute
+      Bootstrap::Logger.init
+
+      # Initialize TUI if enabled
+      tui = Bootstrap::TUI.start(@options)
+
       configurator = Bootstrap::Configurator.new(dry_run: @options[:dry_run])
       run_all = @options[:all]
+
+      # 0. Inject Secrets
+      if run_all || @options[:link]
+        configurator.inject_secrets(@options[:secrets_path])
+      end
 
       # 1. Prerequisites & Install
       if run_all || @options[:formula] || @options[:cask] || @options[:mos]
@@ -151,6 +184,9 @@ module Bootstrap
       end
 
       Bootstrap::Display.success('All tasks completed successfully!')
+
+      # Stop TUI if running
+      Bootstrap::TUI.stop if tui
     end
   end
 end

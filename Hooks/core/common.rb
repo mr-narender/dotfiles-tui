@@ -2,6 +2,8 @@
 
 require_relative 'lib/display'
 require_relative 'lib/system'
+require_relative 'lib/logger'
+require_relative 'lib/spinner'
 require_relative 'lib/hook_config'
 require_relative 'lib/hook_context'
 require_relative 'lib/hooks'

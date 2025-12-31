@@ -10,10 +10,10 @@ require_relative 'system'
 module Bootstrap
   class Configurator
     FORMULAE = %w[
-      aria2 bat bash bottom cmake coreutils fd ripgrep
+      aria2 bat bash bottom cmake coreutils duti fd ripgrep
       fzf gcc git jj git-lfs gnutls go gnupg
       pinentry-mac gpg2 mas mcfly neovim node
-      oh-my-posh openjdk openssh openssl procs lsd
+      oh-my-posh openjdk openssh openssl ouch procs lsd
       readline rsync ruby shellcheck shfmt
       ssh-copy-id tlrc watch wget zsh zsh-completions
     ].freeze
@@ -42,6 +42,7 @@ module Bootstrap
     PRIORITY_HOOKS = %w[core cargo mos zsh starship lunarvim].freeze
 
     attr_reader :script_dir, :hooks_dir, :configs_dir, :core_dir, :dry_run
+    attr_accessor :quiet
 
     def initialize(dry_run: false)
       @script_dir = ENV.fetch('SCRIPT_DIR', File.expand_path('../../..', __dir__))
@@ -73,21 +74,49 @@ module Bootstrap
       apply_brew_environment
       Bootstrap::Display.header('Installing formulae')
 
-      FORMULAE.each do |formula|
-        install_formula(formula)
+      Bootstrap::Spinner.spin('Installing formulae...') do |spinner|
+        FORMULAE.each do |formula|
+          # Start task for this formula
+          if Bootstrap::Display.tui
+            Bootstrap::Display.tui.start_task(formula)
+          end
+
+          # Install the formula
+          install_formula(formula, spinner)
+
+          # Mark task as complete
+          if Bootstrap::Display.tui
+            success = formula_installed?(formula)
+            Bootstrap::Display.tui.complete_task(success: success)
+          end
+        end
       end
+      Bootstrap::Display.persist('All formulae installed', :success)
     end
 
     def install_brew_casks
       apply_brew_environment
       Bootstrap::Display.header('Installing casks')
 
-      Dir.children(@hooks_dir).sort.each do |dir_name|
-        next if dir_name.start_with?('.')
-        next if PRIORITY_HOOKS.include?(dir_name)
+      Bootstrap::Spinner.spin('Installing casks...') do |spinner|
+        Dir.children(@hooks_dir).sort.each do |dir_name|
+          next if dir_name.start_with?('.')
+          next if PRIORITY_HOOKS.include?(dir_name)
 
-        install_hook(dir_name)
+          # Start task for this cask
+          if Bootstrap::Display.tui
+            Bootstrap::Display.tui.start_task(dir_name)
+          end
+
+          install_hook(dir_name, spinner)
+
+          # Mark task as complete
+          if Bootstrap::Display.tui
+            Bootstrap::Display.tui.complete_task(success: true)
+          end
+        end
       end
+      Bootstrap::Display.persist('All casks installed', :success)
     end
 
     def install_mas_apps
@@ -110,31 +139,58 @@ module Bootstrap
       validate_directory(@hooks_dir, 'Hooks')
       apply_brew_environment
 
-      Dir.children(@configs_dir).sort.each do |dir|
-        next if dir.start_with?('.')
+      Bootstrap::Spinner.spin('Linking Configs...') do |spinner|
+        Dir.children(@configs_dir).sort.each do |dir|
+          next if dir.start_with?('.')
 
-        dir_path = File.join(@configs_dir, dir)
-        next unless File.directory?(dir_path)
+          dir_path = File.join(@configs_dir, dir)
+          next unless File.directory?(dir_path)
 
-        run_hook(dir, :pre)
-        Bootstrap::Display.info("Linking #{dir}")
-        Bootstrap::System.run(%(stow --adopt --target="#{Dir.home}" --dir="#{@configs_dir}" "#{dir}"), dry_run: @dry_run)
-        run_hook(dir, :post)
+          if package_linked?(dir)
+            Bootstrap::Logger.log("Skipping #{dir} (already linked)")
+            next
+          end
+
+          # Start task for this config
+          if Bootstrap::Display.tui
+            Bootstrap::Display.tui.start_task(dir)
+          end
+
+          spinner.update("Linking #{dir}...")
+          self.quiet = true
+
+          run_hook(dir, :pre)
+          Bootstrap::Logger.log("Linking #{dir}")
+          Bootstrap::System.run(%(stow --adopt --target="#{Dir.home}" --dir="#{@configs_dir}" "#{dir}"), dry_run: @dry_run, quiet: true)
+          run_hook(dir, :post)
+
+          self.quiet = false
+
+          # Mark task as complete
+          if Bootstrap::Display.tui
+            Bootstrap::Display.tui.complete_task(success: true)
+          end
+        end
       end
+      Bootstrap::Display.persist('All configs linked', :success)
     end
 
     def unlink_configs
       validate_directory(@configs_dir, 'Configs')
 
-      Dir.children(@configs_dir).sort.each do |dir|
-        next if dir.start_with?('.')
+      Bootstrap::Spinner.spin('Unlinking Configs...') do |spinner|
+        Dir.children(@configs_dir).sort.each do |dir|
+          next if dir.start_with?('.')
 
-        dir_path = File.join(@configs_dir, dir)
-        next unless File.directory?(dir_path)
+          dir_path = File.join(@configs_dir, dir)
+          next unless File.directory?(dir_path)
 
-        Bootstrap::Display.warn("Unlinking #{dir}")
-        Bootstrap::System.run(%(stow --target="#{Dir.home}" --dir="#{@configs_dir}" --delete "#{dir}"), allow_failure: true, dry_run: @dry_run)
+          spinner.update("Unlinking #{dir}...")
+          Bootstrap::Logger.log("Unlinking #{dir}")
+          Bootstrap::System.run(%(stow --target="#{Dir.home}" --dir="#{@configs_dir}" --delete "#{dir}"), allow_failure: true, dry_run: @dry_run, quiet: true)
+        end
       end
+      Bootstrap::Display.persist('All configs unlinked', :success)
     end
 
     def setup_uv
@@ -142,7 +198,7 @@ module Bootstrap
 
       Bootstrap::Display.header('Installing Astral uv')
       Bootstrap::System.run('curl -LsSf https://astral.sh/uv/install.sh | bash -s', dry_run: @dry_run)
-      Bootstrap::System.run("#{File.join(Dir.home, '.local', 'bin', 'uv')} python install && uv venv ~/.venv && source ~/.venv/bin/activate", allow_failure: true, dry_run: @dry_run)
+      Bootstrap::System.run("#{File.join(Dir.home, '.local', 'bin', 'uv')} python install --default --preview-features python-install-default", allow_failure: true, dry_run: @dry_run)
     end
 
     def setup_env_file
@@ -164,6 +220,43 @@ module Bootstrap
 
       Bootstrap::Display.header('Linking .env')
       Bootstrap::System.run("ln -sf #{env_source} #{env_dest}", dry_run: @dry_run)
+    end
+
+    def inject_secrets(secrets_path)
+      return if secrets_path.nil? || secrets_path.empty?
+
+      unless File.directory?(secrets_path)
+        Bootstrap::Display.warn("Secrets directory not found at #{secrets_path}. Skipping injection.")
+        return
+      end
+
+      Bootstrap::Display.header("Injecting secrets from #{secrets_path}")
+
+      # Inject .env
+      secrets_env = File.join(secrets_path, '.env')
+      if File.exist?(secrets_env)
+        Bootstrap::Display.info("Copying .env from #{secrets_env}...")
+        Bootstrap::System.run("cp #{secrets_env} #{@script_dir}/.env", dry_run: @dry_run)
+      end
+
+      # Inject Configs
+      secrets_configs = File.join(secrets_path, 'Configs')
+      if File.directory?(secrets_configs)
+        Bootstrap::Display.info("Copying Configs from #{secrets_configs}...")
+        # We use cp_r with remove_destination: true to overwrite existing files/symlinks
+        # But we need to be careful. We want to merge directories, not replace them entirely if possible.
+        # FileUtils.cp_r merges directories.
+        Bootstrap::System.run("cp -R #{secrets_configs}/. #{@configs_dir}/", dry_run: @dry_run)
+      end
+
+      # Inject Hooks
+      secrets_hooks = File.join(secrets_path, 'Hooks')
+      if File.directory?(secrets_hooks)
+        Bootstrap::Display.info("Copying Hooks from #{secrets_hooks}...")
+        # Use shell globbing to include hidden files
+        # cp -R source/. dest/ usually works, but let's be explicit
+        Bootstrap::System.run("cp -R #{secrets_hooks}/. #{@hooks_dir}/", dry_run: @dry_run)
+      end
     end
 
     def setup_conda
@@ -298,6 +391,23 @@ module Bootstrap
 
     alias tweak_macos_configuration tweak_macOS_configuration
 
+    def set_coteditor_as_default_editor
+      apply_brew_environment
+      duti = find_binary('duti', ['/opt/homebrew/bin/duti'])
+      return Bootstrap::Display.warn('duti not found, skipping CotEditor defaults.') if duti.nil?
+
+      Bootstrap::Display.header('Setting CotEditor as default editor for text files')
+      commands = [
+        "#{duti} -s com.coteditor.CotEditor .txt all",
+        "#{duti} -s com.coteditor.CotEditor .log all",
+        "#{duti} -s com.coteditor.CotEditor .md  all"
+      ]
+
+      commands.each do |command|
+        Bootstrap::System.run(command, allow_failure: true, dry_run: @dry_run)
+      end
+    end
+
     def add_to_sudoers
       return if @user.nil? || @user.empty?
 
@@ -325,7 +435,65 @@ module Bootstrap
       Bootstrap::System.run("sudo scutil --set HostName #{fqdn}", allow_failure: true, dry_run: @dry_run)
     end
 
+    def formula_installed?(formula)
+      installed_formulae.include?(formula.split('/').last)
+    end
+
+    def cask_installed?(cask)
+      installed_casks.include?(cask.split('/').last)
+    end
+
+    def package_linked?(dir)
+      # Check if all top-level files in the config dir are symlinked in home
+      config_path = File.join(@configs_dir, dir)
+      return false unless File.directory?(config_path)
+
+      Dir.children(config_path).all? do |child|
+        next true if child == '.DS_Store'
+        
+        source = File.join(config_path, child)
+        target = File.join(Dir.home, child)
+        
+        # If it's a directory in source, stow usually symlinks the contents unless --adopt is used differently
+        # But standard stow symlinks the directory itself if it doesn't exist, or contents if it does.
+        # Simplest check: does target exist and is it a symlink pointing to source?
+        # Stow is complex, but let's check basic symlink existence.
+        
+        if File.symlink?(target)
+          # Check if it points to the right place
+          begin
+            File.readlink(target) == source || File.readlink(target).include?(source)
+          rescue StandardError
+            false
+          end
+        else
+          # If target exists and is not a symlink, it's definitely not linked (conflict or adopted)
+          # If target doesn't exist, it's not linked
+          false
+        end
+      end
+    end
+
     private
+
+    def installed_formulae
+      @installed_formulae ||= begin
+        return [] if @dry_run # In dry-run, we might assume nothing is installed or check system?
+        # Actually, checking system is fine in dry-run to simulate correctly.
+        `#{brew_path} list --formula -1`.split("\n")
+      rescue StandardError
+        []
+      end
+    end
+
+    def installed_casks
+      @installed_casks ||= begin
+        return [] if @dry_run
+        `#{brew_path} list --cask -1`.split("\n")
+      rescue StandardError
+        []
+      end
+    end
 
     def prerequisites_ran?
       File.exist?(@prereq_marker) && File.read(@prereq_marker).strip == 'true'
@@ -370,7 +538,7 @@ module Bootstrap
 
       Bootstrap::Display.header('Installing GNU Stow')
       apply_brew_environment
-      Bootstrap::System.run("#{brew_path} install --no-quarantine --quiet --formula stow", dry_run: @dry_run)
+      Bootstrap::System.run("#{brew_path} install --quiet --formula stow", dry_run: @dry_run)
     end
 
     def run_priority_hooks
@@ -379,9 +547,15 @@ module Bootstrap
       end
     end
 
-    def install_hook(dir_name)
+    def install_hook(dir_name, spinner = nil)
+      self.quiet = !!spinner
+      if spinner
+        spinner.update("Running hooks for #{dir_name}...")
+      end
       run_hook(dir_name, :pre)
       run_hook(dir_name, :post)
+    ensure
+      self.quiet = false
     end
 
     def run_hook(dir_name, stage)
@@ -393,17 +567,29 @@ module Bootstrap
       end
     end
 
-    def install_formula(formula)
+    def install_formula(formula, spinner = nil)
       if FORMULAE_DISABLED.include?(formula)
-        Bootstrap::Display.info("Skipping #{formula} (disabled)")
+        Bootstrap::Logger.log("Skipping #{formula} (disabled)")
+        return
+      end
+
+      if formula_installed?(formula)
+        Bootstrap::Logger.log("Skipping #{formula} (already installed)")
         return
       end
 
       path = brew_path
       raise 'Homebrew is not available.' if path.nil?
 
-      Bootstrap::Display.info("Installing #{formula}")
-      Bootstrap::System.run("#{path} install --no-quarantine --quiet --formula #{formula}", allow_failure: true, dry_run: @dry_run)
+      if spinner
+        spinner.update("Installing #{formula}...")
+      else
+        Bootstrap::Display.info("Installing #{formula}")
+      end
+      
+      Bootstrap::Logger.log("Installing #{formula}")
+      # Use quiet: true if spinner is present to avoid conflict
+      Bootstrap::System.run("#{path} install --quiet --formula #{formula}", allow_failure: true, dry_run: @dry_run, quiet: !!spinner)
     end
 
     def apply_brew_environment

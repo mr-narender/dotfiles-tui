@@ -45,7 +45,7 @@ Bootstrap::Hooks.run('fonts', stage: :pre) do |hook|
     brew = `command -v brew`.strip if brew.nil? || brew.empty?
 
     if brew && !brew.empty?
-      hook.run("#{brew} install --no-quarantine --cask font-iosevka-nerd-font font-maple-mono-nf font-caskaydia-cove-nerd-font font-jetbrains-mono-nerd-font font-hack font-fira-code-nerd-font", allow_failure: true)
+      hook.run("#{brew} install --cask font-iosevka-nerd-font font-maple-mono-nf font-caskaydia-cove-nerd-font font-jetbrains-mono-nerd-font font-hack font-fira-code-nerd-font", allow_failure: true)
     else
       destination = File.join(Dir.home, 'Library', 'Fonts')
       install_fonts_with_curl(hook, destination)

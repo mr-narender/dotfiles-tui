@@ -3,5 +3,5 @@
 require_relative '../core/common'
 
 Bootstrap::Hooks.run('mos', stage: :pre) do |hook|
-  hook.run('/opt/homebrew/bin/brew install --no-quarantine --quiet --cask mos')
+  hook.run('/opt/homebrew/bin/brew install --quiet --cask mos')
 end

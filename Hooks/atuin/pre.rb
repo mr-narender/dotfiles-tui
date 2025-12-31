@@ -3,5 +3,5 @@
 require_relative '../core/common'
 
 Bootstrap::Hooks.run('atuin', stage: :pre) do |hook|
-  hook.run('/opt/homebrew/bin/brew install --no-quarantine --quiet --formula atuin')
+  hook.run('/opt/homebrew/bin/brew install --quiet --formula atuin')
 end

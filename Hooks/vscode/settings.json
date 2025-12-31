@@ -1,42 +1,52 @@
 {
-  "vscode_custom_css.statusbar": false,
-  "vscode_custom_css.imports": [
-    "file:///Users/narender/Library/Application Support/Code/User/style.css"
-  ],
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[lua]": {
+    "editor.defaultFormatter": "sumneko.lua"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "autoHide.enable": true,
   "breadcrumbs.enabled": false,
+  "chat.commandCenter.enabled": false,
   "chat.editor.fontSize": 14,
   "chat.editor.wordWrap": "on",
   "diffEditor.hideUnchangedRegions.enabled": true,
   "diffEditor.ignoreTrimWhitespace": false,
-  "editor.bracketPairColorization.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorBlinking": "smooth", // Smooth blinking
+  "editor.cursorStyle": "block", // Makes the cursor less intrusive
   "editor.folding": true,
   "editor.foldingStrategy": "auto",
-  "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",
+  "editor.fontFamily": "Iosevka, monospace",
   "editor.fontLigatures": true,
-  "editor.fontSize": 14,
-  "editor.fontWeight": "400",
+  "editor.fontSize": 17,
+  "editor.fontWeight": "100",
   "editor.formatOnSave": true,
-  "editor.glyphMargin": false,
+  "editor.glyphMargin": true,
+  "editor.guides.bracketPairs": "active",
   "editor.guides.highlightActiveBracketPair": true,
-  "editor.guides.indentation": false,
+  "editor.guides.indentation": true,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlineSuggest.enabled": true,
-  "editor.lightbulb.enabled": "off",
+  "editor.lightbulb.enabled": "onCode",
   "editor.lineNumbers": "on",
   "editor.linkedEditing": true,
-  "editor.matchBrackets": "never",
+  "editor.matchBrackets": "always",
   "editor.minimap.autohide": true,
   "editor.minimap.maxColumn": 80,
   "editor.minimap.renderCharacters": false,
@@ -44,18 +54,28 @@
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
   "editor.padding.top": 10,
-  "editor.renderWhitespace": "none",
+  "editor.renderLineHighlight": "gutter", // Highlights the active line
+  "editor.renderWhitespace": "boundary", // Shows whitespace only where necessary
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "auto",
   "editor.scrollbar.verticalScrollbarSize": 0,
-  "editor.showFoldingControls": "mouseover",
+  "editor.scrollBeyondLastLine": false,
+  "editor.showFoldingControls": "always",
+  "editor.smoothScrolling": true, // Enables smooth scrolling for a less jarring experience
+  "editor.suggestOnTriggerCharacters": false, // Avoids popping up suggestions on characters
   "editor.suggestSelection": "first",
+  "editor.wordWrap": "on",
   "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.openEditors.visible": 1,
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 10000,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "files.autoSave": "onFocusChange",
+  "files.autoSaveDelay": 2000,
   "files.exclude": {
     "/.classpath": true,
     "/.factorypath": true,
@@ -67,20 +87,31 @@
     "/node_modules/": true
   },
   "git.autofetch": true,
+  "git.confirmSync": false,
+  "Lua.diagnostics.neededFileStatus": {
+    "undefined-doc-name": "None"
+  },
   "redhat.telemetry.enabled": false,
-  "scm.diffDecorations": "none",
-  "scm.showIncomingChanges": "always",
-  "scm.showOutgoingChanges": "always",
-  "terminal.integrated.cursorStyle": "block",
-  "terminal.integrated.defaultLocation": "view",
+  "scm.diffDecorations": "overview",
+  "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.defaultProfile.windows": "PowerShell",
   "terminal.integrated.env.windows": {},
-  "terminal.integrated.fontFamily": "FiraCode Nerd Font, Consolas, 'Courier New', monospace",
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontFamily": "Iosevka, monospace",
+  "terminal.integrated.fontSize": 13, // A slightly smaller terminal font sizelines to prevent memory issues
   "terminal.integrated.fontWeight": "500",
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.persistentSessionReviveProcess": "onExitAndWindowClose",
+  "terminal.integrated.profiles.osx": {
+    "tmux": {
+      "icon": "terminal-tmux",
+      "path": "tmux"
+    },
+    "zsh": {
+      "args": ["-l"],
+      "path": "zsh"
+    }
+  },
   "terminal.integrated.profiles.windows": {
     "Command Prompt": {
       "args": [],
@@ -98,16 +129,16 @@
       "source": "PowerShell"
     }
   },
-  "terminal.integrated.scrollback": 10000,
-  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
-  "terminal.integrated.tabs.enabled": true,
-  "terminal.integrated.tabs.location": "right",
+  "terminal.integrated.shellIntegration.decorationsEnabled": "gutter",
+  "terminal.integrated.tabs.location": "left",
+  "update.showReleaseNotes": false,
+  "vsicons.dontShowNewVersionMessage": true,
   "window.autoDetectColorScheme": true,
-  "window.commandCenter": true,
+  "window.commandCenter": false,
   "window.density.editorTabHeight": "compact",
   "window.newWindowDimensions": "inherit",
+  "window.newWindowProfile": "Default",
   "window.zoomPerWindow": true,
-  "workbench.activityBar.location": "hidden",
   "workbench.colorCustomizations": {
     "[mono-cl]": {
       "editorLineNumber.foreground": "#4b4b4b"
@@ -118,22 +149,33 @@
       "titleBar.activeBackground": "#242038",
       "titleBar.activeForeground": "#ffffff"
     },
+    "editorBracketPairGuide.activeBackground1": "#F367C9",
+    "editorBracketPairGuide.activeBackground2": "#FD70B2",
+    "editorBracketPairGuide.activeBackground3": "#41A7FA",
+    "editorBracketPairGuide.activeBackground4": "#B084EB",
+    "editorBracketPairGuide.activeBackground5": "#DBDADA",
+    "editorBracketPairGuide.activeBackground6": "#16FAD8",
+    "editorBracketPairGuide.background1": "#F8B46C",
+    "editorBracketPairGuide.background2": "#FB78B5",
+    "editorBracketPairGuide.background3": "#4AACFB",
+    "editorBracketPairGuide.background4": "#B98BF5",
+    "editorBracketPairGuide.background5": "#DAD8D8",
+    "editorBracketPairGuide.background6": "#18EECE",
     "window.titleBarStyle": ""
   },
-  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.colorTheme": "Nord Flat",
   "workbench.editor.enablePreview": true,
-  "workbench.iconTheme": "catppuccin-mocha",
-  "workbench.layoutControl.enabled": false,
+  "workbench.editor.openSideBySideDirection": "down", // Opens files vertically side by side
+  "workbench.iconTheme": "catppuccin-frappe",
   "workbench.layoutControl.type": "both",
   "workbench.panel.defaultLocation": "bottom",
-  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
-  "workbench.preferredHighContrastLightColorTheme": "Catppuccin Mocha",
-  "workbench.preferredLightColorTheme": "Catppuccin Mocha",
+  "workbench.preferredDarkColorTheme": "Catppuccin Frappé",
+  "workbench.preferredHighContrastLightColorTheme": "Nord Flat",
+  "workbench.preferredLightColorTheme": "Nord Flat",
   "workbench.productIconTheme": "fluent-icons",
-  "workbench.reduceMotion": "on",
-  "workbench.sideBar.location": "left",
-  "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": false,
-  "workbench.tree.renderIndentGuides": "none",
+  "workbench.reduceMotion": "auto",
+  "workbench.settings.applyToAllProfiles": ["editor.wordWrap"],
+  "workbench.startupEditor": "none", // Hides the status bar
+  "workbench.tree.renderIndentGuides": "always",
   "workbench.view.alwaysShowHeaderActions": true
 }
