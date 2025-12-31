@@ -48,6 +48,9 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
+### Codex ###
+Configs/codex/.codex/sessions/
+
 ### PowerShell ###
 # Exclude packaged modules
 *.zip
@@ -298,6 +301,28 @@ Configs/continue/.continue/tsconfig.json
 Configs/continue/.continue/dev_data/
 Configs/continue/.continue/sessions/
 
-# Secrets
+# Secrets (kept in ~/Documents/Secrets)
 .env
-https://www.toptal.com/developers/gitignore/api/macos,windows,linux,python,powershell,zsh
+Hooks/atuin/.env
+Configs/aws/.aws/config
+Configs/aws/.aws/credentials
+Configs/gpg/.gnupg/.#*
+Configs/gpg/.gnupg/openpgp-revocs.d/
+Configs/gpg/.gnupg/private-keys-v1.d/
+Configs/gpg/.gnupg/pubring.kbx
+Configs/gpg/.gnupg/trustdb.gpg
+Configs/ssh/.ssh/config
+Configs/ssh/.ssh/config.common
+Configs/ssh/.ssh/config.local
+Configs/ssh/.ssh/id_rsa
+Configs/ssh/.ssh/id_rsa.pub
+Configs/ssh/.ssh/known_hosts
+Configs/ssh/.ssh/known_hosts.old
+Configs/zsh/.localrc
+Configs/zsh/.zsh/completion/exports.zsh
+Configs/zsh/.zsh/completion/secrets.zsh
+Configs/zsh/.zsh_history
+**/.gem/**
+
+
+# https://www.toptal.com/developers/gitignore/api/macos,windows,linux,python,powershell,zsh
