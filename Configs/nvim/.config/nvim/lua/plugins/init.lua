@@ -1,25 +1,13 @@
 return {
-  {
-    "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    opts = require "configs.conform",
-  },
+    -- load gruvbox theme
+    require("plugins.gruvbox"),
 
-  -- These are some examples, uncomment them if you want to see them work!
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
+    -- load mason and the treesitter grammar
+    require("plugins.mason"),
+    require("plugins.treesitter"),
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+    -- load all the lsp servers
+    require("plugins.python"),
+    require("plugins.ruby"),
+    require("plugins.lua"),
 }
