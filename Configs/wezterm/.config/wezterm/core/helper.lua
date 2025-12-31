@@ -1,22 +1,25 @@
-local function get_os()
-    local sep = package.config:sub(1, 1)
-    if sep == "\\" then
-        return "Windows"
-    else
-        local fh, err = io.popen("uname -s", "r")
-        if fh then
-            local os_name = fh:read("*l")
-            fh:close()
-            if os_name == "Linux" then
-                return "Linux"
-            elseif os_name == "Darwin" then
-                return "macOS"
-            end
-        end
+local wezterm = require('wezterm')
+
+local cached_os_name = nil
+
+local function get_os_name()
+    if cached_os_name then
+        return cached_os_name
     end
-    return "Unknown"
+
+    if wezterm.target_triple:find("windows") then
+        cached_os_name = "Windows"
+    elseif wezterm.target_triple:find("darwin") then
+        cached_os_name = "macOS"
+    elseif wezterm.target_triple:find("linux") then
+        cached_os_name = "Linux"
+    else
+        cached_os_name = "Unknown"
+    end
+
+    return cached_os_name
 end
 
 return {
-    get_os = get_os
+    get_os_name = get_os_name
 }

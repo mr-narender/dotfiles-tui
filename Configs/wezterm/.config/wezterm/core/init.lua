@@ -1,20 +1,30 @@
--- Load configuration modules
-local window = require("core.window")
-local colors = require("core.colors")
-local font = require("core.font")
-local keybindings = require("core.keybindings")
-local mousebindings = require("core.mousebindings")
-local launch_menu = require("core.launch")
-local tab_title = require("core.tab_title")
-local maximized = require("core.maximized")
+local wezterm = require('wezterm')
+local common = require("core.common")
+local helper = require("core.helper")
 
+local os_name = helper.get_os_name()
+
+-- Load OS-specific configuration
+local os_config = {}
+if os_name == "Windows" or os_name == "Linux" then
+    os_config = require("core.windows")
+elseif os_name == "macOS" then
+    os_config = require("core.macos")
+end
+
+-- Combine common and OS-specific configurations
 return {
-    window = window,
-    colors = colors,
-    font = font,
-    keybindings = keybindings,
-    mousebindings = mousebindings,
-    launch_menu = launch_menu,
-    tab_title = tab_title,
-    maximized = maximized
+    -- Common configurations
+    utils = common.utils,
+    colors = common.colors,
+    font = common.font,
+    window = common.window,
+    tab_title = common.tab_title,
+
+    -- OS-specific configurations
+    keyboard = os_config.keyboard or {},
+    mouse = os_config.mouse or {},
+    default_prog = os_config.default_prog,
+    default_cwd = os_config.default_cwd,
+    launch_menu = os_config.launch_menu or {}
 }

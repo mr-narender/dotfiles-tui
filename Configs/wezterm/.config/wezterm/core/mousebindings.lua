@@ -16,7 +16,8 @@ local mousebindings = {
             event = { Down = { streak = 1, button = "Left" } },
             mods = "CTRL",
             action = wezterm.action.Nop
-        }
+        },
+
     },
 }
 

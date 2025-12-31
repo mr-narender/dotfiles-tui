@@ -2,7 +2,7 @@
 TERM = "xterm-256color"
 
 [window]
-startup_mode =  "Maximized"
+startup_mode = "Maximized"
 # startup_mode =  "SimpleFullscreen"
 # position = { x = 800, y = 400 }
 dimensions = { columns = 110, lines = 30 }
@@ -14,7 +14,7 @@ blur = true
 option_as_alt = "Both"
 
 [font]
-normal.family = "CaskaydiaCove Nerd Font Propo"
+normal.family = "Iosevka, monospace"
 size = 19
 
 [scrolling]

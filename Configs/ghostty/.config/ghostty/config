@@ -1,0 +1,212 @@
+# =========================
+#        VISUALS
+# =========================
+background-opacity = 0.94
+background-blur = 16
+theme = Catppuccin Frappe
+window-colorspace = display-p3
+window-decoration = true
+macos-titlebar-style = transparent
+window-theme = auto
+window-height = 110
+window-width = 30
+
+# Padding for eye-comfort
+window-padding-x = 16
+window-padding-y = 12
+window-padding-balance = true
+window-padding-color = background
+
+# Splits styling
+unfocused-split-opacity = 0.85
+split-divider-color = #444444
+
+
+# =========================
+#          FONT
+# =========================
+font-family = "Iosevka, monospace"
+font-style-italic = false
+font-feature = +calt, +liga, +dlig
+font-size = 17
+
+# Better readability
+font-thicken = true
+font-thicken-strength = 1
+adjust-cell-height = 10%
+
+
+# =========================
+#         CURSOR
+# =========================
+cursor-style = bar
+adjust-cursor-thickness = 5
+adjust-cursor-height = 120%
+cursor-color = #ff0000
+cursor-opacity = 1.0
+cursor-style-blink = false
+
+
+# =========================
+# CLIPBOARD / SELECTION
+# =========================
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+copy-on-select = true
+
+
+# =========================
+#  WINDOW / NAVIGATION
+# =========================
+window-width = 120
+window-height = 32
+confirm-close-surface = false
+focus-follows-mouse = true
+mouse-hide-while-typing = true
+quit-after-last-window-closed = true
+resize-overlay = always
+resize-overlay-position = center
+
+
+# =========================
+#     QUICK TERMINAL
+# =========================
+quick-terminal-animation-duration = 10
+quick-terminal-position = center
+quick-terminal-screen = mouse
+
+
+# =========================
+# SHELL & INTEGRATION
+# =========================
+shell-integration = zsh
+shell-integration-features = no-cursor
+term = xterm-256color
+
+
+# =========================
+#       MAC ICON
+# =========================
+macos-icon = chalkboard
+macos-icon-frame = plastic
+macos-icon-ghost-color = #e1490d
+
+
+# =========================
+#       SCROLLBACK
+# =========================
+scrollback-limit = 100000000
+
+
+# =========================
+#      OPTIONAL COMMANDS
+# =========================
+# command = '/opt/homebrew/bin/zellij'
+# command = '~/.tmux.load'
+# initial-command = '~/.tmux.load'
+
+
+# =========================
+#        KEYBINDINGS
+# =========================
+
+keybind = super+arrow_down=goto_split:down
+keybind = super+arrow_up=goto_split:up
+
+# disable default home/end scrolling
+keybind = super+home=unbind
+keybind = super+end=unbind
+keybind = shift+enter=unbind
+
+# beginning/end of line
+keybind = super+home=text:\x01
+keybind = super+end=text:\x05
+keybind = shift+enter=text:\x1b\r
+
+keybind = super+alt+shift+j=write_screen_file:open
+keybind = super+alt+shift+w=close_all_windows
+keybind = super+ctrl+shift+j=write_screen_file:copy
+keybind = super+alt+i=inspector:toggle
+keybind = super+alt+w=close_tab:this
+keybind = super+ctrl+equal=equalize_splits
+keybind = super+ctrl+arrow_down=resize_split:down,10
+keybind = super+ctrl+arrow_left=resize_split:left,10
+keybind = super+ctrl+arrow_right=resize_split:right,10
+keybind = super+ctrl+arrow_up=resize_split:up,10
+keybind = super+ctrl+f=toggle_fullscreen
+keybind = super+shift+bracket_left=previous_tab
+keybind = super+shift+bracket_right=next_tab
+keybind = super+shift+,=reload_config
+keybind = super+shift+enter=toggle_split_zoom
+keybind = super+shift+arrow_down=jump_to_prompt:1
+keybind = super+shift+arrow_up=jump_to_prompt:-1
+keybind = super+shift+d=new_split:down
+keybind = super+shift+j=write_screen_file:paste
+keybind = super+shift+p=toggle_command_palette
+keybind = super+shift+t=undo
+keybind = super+shift+v=paste_from_selection
+keybind = super+shift+w=close_window
+keybind = super+shift+z=redo
+keybind = ctrl+shift+tab=previous_tab
+keybind = super+bracket_left=goto_split:previous
+keybind = super+bracket_right=goto_split:next
+keybind = super+digit_1=goto_tab:1
+keybind = super+digit_2=goto_tab:2
+keybind = super+digit_3=goto_tab:3
+keybind = super+digit_4=goto_tab:4
+keybind = super+digit_5=goto_tab:5
+keybind = super+backspace=text:\x15
+keybind = super+digit_6=goto_tab:6
+keybind = super+digit_7=goto_tab:7
+keybind = super+digit_8=goto_tab:8
+keybind = super+digit_9=last_tab
+keybind = super+equal=increase_font_size:1
+keybind = super++=increase_font_size:1
+keybind = super+,=open_config
+keybind = super+-=decrease_font_size:1
+keybind = super+0=reset_font_size
+keybind = super+1=goto_tab:1
+keybind = super+2=goto_tab:2
+keybind = super+3=goto_tab:3
+keybind = super+4=goto_tab:4
+keybind = super+5=goto_tab:5
+keybind = super+6=goto_tab:6
+keybind = super+7=goto_tab:7
+keybind = super+8=goto_tab:8
+keybind = super+9=last_tab
+keybind = super+enter=toggle_fullscreen
+
+keybind = super+page_down=scroll_page_down
+keybind = super+page_up=scroll_page_up
+keybind = super+alt+arrow_down=jump_to_prompt:1
+keybind = super+alt+arrow_left=text:\x01
+keybind = super+alt+arrow_right=text:\x05
+keybind = super+alt+arrow_up=jump_to_prompt:-1
+
+keybind = super+a=select_all
+keybind = super+c=copy_to_clipboard
+keybind = super+d=new_split:right
+keybind = super+k=clear_screen
+keybind = super+n=new_window
+keybind = super+q=quit
+keybind = super+t=new_tab
+keybind = super+v=paste_from_clipboard
+keybind = super+w=close_surface
+keybind = super+z=undo
+
+keybind = alt+arrow_left=esc:b
+keybind = alt+arrow_right=esc:f
+keybind = ctrl+tab=next_tab
+
+keybind = shift+end=adjust_selection:end
+keybind = shift+home=adjust_selection:home
+keybind = shift+page_down=adjust_selection:page_down
+keybind = shift+page_up=adjust_selection:page_up
+keybind = shift+arrow_down=adjust_selection:down
+keybind = shift+arrow_left=adjust_selection:left
+keybind = shift+arrow_right=adjust_selection:right
+keybind = shift+arrow_up=adjust_selection:up
+
+keybind = copy=copy_to_clipboard
+keybind = paste=paste_from_clipboard
