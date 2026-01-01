@@ -1,0 +1,21 @@
+model = "gpt-5.2-codex"
+model_reasoning_effort = "high"
+
+# Add your trusted projects here
+[projects."/path/to/your/project"]
+trust_level = "trusted"
+
+[notice]
+hide_gpt5_1_migration_prompt = true
+"hide_gpt-5.1-codex-max_migration_prompt" = true
+
+# MCP Server configurations
+# Replace paths and credentials with your own
+
+[mcp_servers.fs_backend]
+command = "/path/to/mcp-server-filesystem"
+args = ["/path/to/your/backend"]
+
+[mcp_servers.postgres]
+command = "/path/to/mcp-server-postgres"
+args = ["postgresql://username:password@host:port/database"]

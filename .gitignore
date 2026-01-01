@@ -50,6 +50,9 @@ Temporary Items
 
 ### Codex ###
 Configs/codex/.codex/sessions/
+Configs/codex/.codex/history.jsonl
+Configs/codex/.codex/auth.json
+Configs/codex/.codex/config.toml
 
 ### PowerShell ###
 # Exclude packaged modules
