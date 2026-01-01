@@ -18,6 +18,7 @@ excluded_hooks:
   nvchad: true
   oh-my-posh: true
   pycharm: true
+  powerlevel10k: true
   raindropio: true
   rectangle:
     pre: true
